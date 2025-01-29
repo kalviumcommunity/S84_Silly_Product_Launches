@@ -88,5 +88,6 @@ Frontend Development (HTML, CSS, JS, React.js, Bootstrap, Tailwind.css)
 UI/UX Design (Figma, Adobe XD)
 Backend Development (Server Side Programming, Authentication, Database Management, API development)
 Security Practices (Password hashing, Data encryption, Authorization)
+Data Privacy (User data protection, Review moderation, GDPR compliance)
 Deployment and Cloud Services
 Soft Skills like collaboration and problem solving
