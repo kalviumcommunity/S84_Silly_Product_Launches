@@ -52,10 +52,11 @@ When a user submits a product, it will be stored in database.
 The backend will use RESTful APIs to handle:
 
 Fetching the list of products using GET
-Submitting new products using POST
+Submitting new products using POST (with rate limiting)
 User authentication and profile management
-Voting on products using POST
+Voting on products using POST (with duplicate vote prevention)
 Searching or filtering products by categories using GET
+Error handling for all endpoints with appropriate status codes
 
 ***Deployment:***
 
