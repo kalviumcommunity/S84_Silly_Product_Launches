@@ -91,3 +91,5 @@ Security Practices (Password hashing, Data encryption, Authorization)
 Data Privacy (User data protection, Review moderation, GDPR compliance)
 Deployment and Cloud Services
 Soft Skills like collaboration and problem solving
+
+Deployment Link: https://s84-silly-product-launches.onrender.com
