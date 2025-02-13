@@ -1,0 +1,15 @@
+meta {
+  name: Ping
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/ping
+  body: none
+  auth: none
+  tests: {
+    "Status code is 200": res.status === 200,
+    "Content type is text": res.headers["content-type"].includes("text")
+  }
+}
