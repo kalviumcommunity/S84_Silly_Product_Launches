@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 const PORT = process.env.PORT || 3000;
-const connectToDb = require("./Config/db");
+const connectToDb = require("./src/Config/db");
 
 app.get("/ping", (req, res) => {
   try {
