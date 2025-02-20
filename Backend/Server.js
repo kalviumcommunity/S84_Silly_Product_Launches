@@ -14,6 +14,7 @@ app.get("/ping", (req, res) => {
 
 const db = process.env.DB_URI;
 
+
 app.listen(PORT, async () => {
   try {
     await connectToDb(db);
