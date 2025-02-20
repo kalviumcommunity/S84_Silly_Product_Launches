@@ -5,7 +5,8 @@ const connectToDb = async(url) =>{
         await connect(url)
         console.log('Connected to database')
     } catch (error) {
-        console.log('Error in Connecting to Database')
+        console.error('Error in Connecting to Database:', error)
+        throw error
     }
 }
 
