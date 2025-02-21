@@ -1,4 +1,4 @@
-const {connect, ModifiedPathsSnapshot} = require('mongoose')
+const {connect} = require('mongoose')
 
 const connectToDb = async(url) =>{
     try {

@@ -4,9 +4,14 @@ require("dotenv").config();
 const PORT = process.env.PORT || 3000;
 const connectToDb = require("./src/Config/db");
 
+
+app.get('/', (req,res)=>{
+  res.send('This is Home Route')
+})
+
 app.get("/ping", (req, res) => {
   try {
-    res.status(200).send("This is Home Route");
+    res.status(200).send("You are inside Ping Route");
   } catch (error) {
     res.status(500).send("Internal Server Error");
   }
