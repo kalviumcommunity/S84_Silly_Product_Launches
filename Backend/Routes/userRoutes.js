@@ -18,7 +18,12 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const { firstName, lastName, email, userName, age } = req.body;
-
+  if (!firstName || !lastName || !email || !userName || !age) {
+    return res.status(400).json({
+      success: false,
+      message: "All fields are required"
+    });
+  }
   try {
     const newUser = new users({ firstName, lastName, email, userName, age });
     await newUser.save();
