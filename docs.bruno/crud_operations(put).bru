@@ -1,0 +1,21 @@
+meta {
+  name: crud_operations(put)
+  type: http
+  seq: 6
+}
+
+put {
+  url: http://localhost:8000/users/67bd40257c436f3e87829f77
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstName": "Krishan",
+    "lastName": "Goyal",
+    "email": "krishan@gmail.com",
+    "userName": "krishan12",
+    "age": 20
+  }
+}
