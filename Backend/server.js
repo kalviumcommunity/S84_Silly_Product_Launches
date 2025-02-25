@@ -5,8 +5,8 @@ const PORT = process.env.PORT || 3000;
 const connectToDb = require("./src/Config/db");
 const users = require('./Routes/userRoutes')
 
-app.use('/users', users)
 app.use(express.json())
+app.use('/users', users)
 
 
 app.get('/', (req,res)=>{
