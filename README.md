@@ -92,4 +92,6 @@ Data Privacy (User data protection, Review moderation, GDPR compliance)
 Deployment and Cloud Services
 Soft Skills like collaboration and problem solving
 
-Deployment Link: https://s84-silly-product-launches.onrender.com
+***Backend Deployment Link***: https://s84-silly-product-launches.onrender.com
+
+***Frontend Deployment Link***: https://krishangoyal-s84-asap.pages.dev/
