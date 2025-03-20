@@ -1,0 +1,24 @@
+.post-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  width: 20rem;
+  height: 30rem;
+}
+
+.post-card img {
+  width: 150px;
+  height: 150px;
+  margin: 10px;
+  object-fit: cover;
+}
+
+.post-card h2 {
+  font-size: 1.5em;
+  margin: 8px 0;
+  color: #333;
+}

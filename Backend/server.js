@@ -4,12 +4,19 @@ require("dotenv").config();
 const PORT = process.env.PORT || 3000;
 const connectToDb = require("./src/Config/db");
 const users = require('./Routes/userRoutes')
+const Posts = require('./Routes/postRoutes')
+const cors = require('cors');
+const rolerouter = require("./Routes/rolesRoute");
+
+app.use(cors())
 
 app.use(express.json())
 app.use('/users', users)
+app.use('/posts', Posts)
+app.use('/api', rolerouter)
 
 
-app.get('/', (req,res)=>{
+app.get('/', (req, res) => {
   res.send('This is Home Route')
 })
 
