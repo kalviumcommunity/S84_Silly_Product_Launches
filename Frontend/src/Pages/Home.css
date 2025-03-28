@@ -3,11 +3,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding-top: 20px;
 }
 
 .post-container{
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 30px;
+  padding: 20px;
   align-items: center;
   justify-content: center;
+}
+
+.title{
+  padding-top: 20px;
 }

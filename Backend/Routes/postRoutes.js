@@ -15,40 +15,25 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.post("/", async (req, res) => {
+  const { title, content, image_url, likes_count, tags } = req.body;
+  if (!title || !content || !image_url || !tags) {
+    return res.status(400).json({
+      success: false,
+      message: "All fields are required"
+    });
+  }
   try {
-    const { title, content, image_url, likes_count, tags } = req.body;
-    const postId = req.params.id;
-
-    const updatedPost = await Post.findByIdAndUpdate(
-      postId,
-      {
-        title,
-        content,
-        image_url,
-        likes_count: likes_count || 0,
-        tags
-      },
-      { new: true }
-    );
-
-    if (!updatedPost) {
-      return res.status(404).json({
-        success: false,
-        message: "Post not found.",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Post updated successfully!",
-      post: updatedPost,
+    const newPost = new Post({ title, content, image_url, likes_count, tags });
+    await newPost.save();
+    res.json({
+      message: "New Post saved",
+      post: newPost,
     });
   } catch (error) {
-    console.error("Error updating post:", error);
     res.status(500).json({
       success: false,
-      message: "Failed to update post.",
+      message: "Error in posting data",
     });
   }
 });
@@ -59,7 +44,7 @@ router.put("/:id", async (req, res) => {
   const { title, content, image_url, likes_count, tags } = req.body;
 
   try {
-    const updatedPost = await users.findByIdAndUpdate(
+    const updatedPost = await Post.findByIdAndUpdate(
       id,
       {
       title,
@@ -84,6 +69,29 @@ router.put("/:id", async (req, res) => {
         success: false,
         message: 'Erorr in updating data'
     })
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedUser = await Post.findByIdAndDelete(id)
+    if(!deletedUser){
+        return res.status(404).json({
+            success: false,
+            message: 'User not found'
+        })
+    }
+    res.json({
+      success: true,
+      message: `User with ${id} deleted`,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Error in deleting data",
+    });
   }
 });
 

@@ -1,10 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./Home.css";
-import PostCard from '../Components/PostsCard'
+import PostCard from "../Components/PostsCard";
 
-export default function Home() {
+export default function Explore() {
   const [posts, setposts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,13 +24,23 @@ export default function Home() {
     fetchPosts();
   }, []);
 
-  if (loading) return <div className="center"><h2>Loading...</h2></div>;
-  if (error) return <div className="center"><h2>{error}</h2></div>;
+  if (loading)
+    return (
+      <div className="center">
+        <h2>Loading...</h2>
+      </div>
+    );
+  if (error)
+    return (
+      <div className="center">
+        <h2>{error}</h2>
+      </div>
+    );
 
   return (
     <>
       <div className="center">
-        <h1 className="title">Welcome to Silly Product Launches</h1>
+        <h1 className="title">Posts</h1>
       </div>
       <div className="post-container">
         {posts.map((ele) => (
@@ -41,5 +50,3 @@ export default function Home() {
     </>
   );
 }
-
-

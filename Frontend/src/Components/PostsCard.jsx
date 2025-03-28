@@ -7,7 +7,7 @@ export default function PostCard({ post }) {
       <img src={post.image_url} alt={post.name} />
       <h2>{post.title}</h2>
       <p>{post.content}</p>
-      <strong>{post.tags}</strong>
+      <div className='tags'><strong>{post.tags.join(' ')}</strong></div>
     </div>
      
   );
