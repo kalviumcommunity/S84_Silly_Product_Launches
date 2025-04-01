@@ -11,7 +11,7 @@ html,body{
   background-color: #fff;
   width: 20rem;
   height: 30rem;
-
+  position: relative;
 }
 
 .post-card img {
@@ -31,4 +31,26 @@ html,body{
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.card-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 5px;
+}
+
+.card-actions .edit-btn,
+.card-actions .delete-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.card-actions .delete-btn {
+  background-color: #dc3545;
 }

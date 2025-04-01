@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const Post = require("../Models/postModel");
 router.use(express.json());
 
@@ -41,18 +42,21 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { title, content, image_url, likes_count, tags } = req.body;
+  const { title, content, image_url, tags } = req.body;
+
+  // Validate ObjectId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid post ID" });
+  }
+
+  if (!title || !content || !image_url || !tags) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
 
   try {
     const updatedPost = await Post.findByIdAndUpdate(
       id,
-      {
-      title,
-      content,
-      image_url,
-      likes_count: likes_count || 0,
-      tags
-      },
+      { title, content, image_url, tags },
       { new: true }
     );
 
@@ -60,15 +64,9 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    res.json({
-      success: true,
-      user: updatedPost,
-    });
-  } catch (err) {
-    res.status(500).json({
-        success: false,
-        message: 'Erorr in updating data'
-    })
+    res.status(200).json({ message: "Post updated successfully", post: updatedPost });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating post" });
   }
 });
 
@@ -76,22 +74,13 @@ router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deletedUser = await Post.findByIdAndDelete(id)
-    if(!deletedUser){
-        return res.status(404).json({
-            success: false,
-            message: 'User not found'
-        })
+    const deletedPost = await Post.findByIdAndDelete(id);
+    if (!deletedPost) {
+      return res.status(404).json({ message: "Post not found" });
     }
-    res.json({
-      success: true,
-      message: `User with ${id} deleted`,
-    });
-  } catch (err) {
-    res.status(400).json({
-      success: false,
-      message: "Error in deleting data",
-    });
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting post" });
   }
 });
 
