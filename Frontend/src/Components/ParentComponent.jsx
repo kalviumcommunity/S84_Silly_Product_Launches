@@ -23,7 +23,7 @@ export default function ParentComponent() {
   const handleUpdatePost = async (postId, updatedPost) => {
     try {
       // Make an API call to update the post in the database
-      const response = await fetch(`http://localhost:8000/${postId}`, {
+      const response = await fetch(`http://localhost:8000/posts/${postId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export default function ParentComponent() {
   const handleDeletePost = async (postId) => {
     try {
       // Make an API call to delete the post in the database
-      const response = await fetch(`/api/posts/${postId}`, {
+      const response = await fetch(`http://localhost:8000/posts/${postId}`, {
         method: "DELETE",
       });
 
