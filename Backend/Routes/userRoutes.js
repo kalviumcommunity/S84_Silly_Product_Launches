@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const router = express.Router();
 const users = require("../Models/userModel");
+const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken");
+
 router.use(express.json());
 
 router.get("/", async (req, res) => {
@@ -16,16 +19,17 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  const { firstName, lastName, email, userName, age } = req.body;
-  if (!firstName || !lastName || !email || !userName || !age) {
+router.post("/register", async (req, res) => {
+  const { firstName, lastName, email, password, userName, age } = req.body;
+  if (!firstName || !lastName || !email ||  !password || !userName || !age) {
     return res.status(400).json({
       success: false,
       message: "All fields are required"
     });
   }
   try {
-    const newUser = new users({ firstName, lastName, email, userName, age });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new users({ firstName, lastName, email, password: hashedPassword, userName, age });
     await newUser.save();
     res.json({
       message: "New user saved",
@@ -91,6 +95,54 @@ router.delete("/:id", async (req, res) => {
     res.status(400).json({
       success: false,
       message: "Error in deleting data",
+    });
+  }
+});
+
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({
+      success: false,
+      message: "Email and password are required",
+    });
+  }
+
+  try {
+    const user = await users.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials",
+      });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, email: user.email, userName: user.userName },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error during login",
+      error: error.message,
     });
   }
 });

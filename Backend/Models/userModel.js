@@ -18,6 +18,11 @@ const userSchema = new Schema(
       unique: true,
     },
 
+    password:{
+      type: String,
+      required: [true, 'Password is required'],
+    },
+
     userName: {
       type: String,
       required: true,
