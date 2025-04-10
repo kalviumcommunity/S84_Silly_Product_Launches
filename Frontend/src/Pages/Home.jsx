@@ -10,20 +10,41 @@ export default function Home() {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/posts");
+      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+      const response = await axios.get("http://localhost:8000/posts", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+      });
       setPosts(response.data);
       setLoading(false);
     } catch (err) {
-      setError("Failed to fetch posts");
+      if (err.response && err.response.status === 401) {
+        setError("Unauthorized: Please log in to access this resource.");
+      } else {
+        setError("Failed to fetch posts");
+      }
       setLoading(false);
     }
   };
 
   const handleUpdatePost = async (postId, updatedPost) => {
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    if (!token) {
+      console.log("User not logged in. Showing alert."); // Debugging log
+      alert("You must be logged in to edit a post."); // Alert for not logged-in users
+      return;
+    }
+
     try {
       const response = await axios.put(
         `http://localhost:8000/posts/${postId}`,
-        updatedPost
+        updatedPost,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
       );
       if (response.status === 200) {
         setPosts((prevPosts) =>
@@ -38,9 +59,21 @@ export default function Home() {
   };
 
   const handleDeletePost = async (postId) => {
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    if (!token) {
+      console.log("User not logged in. Showing alert."); // Debugging log
+      alert("You must be logged in to delete a post."); // Alert for not logged-in users
+      return;
+    }
+
     try {
       const response = await axios.delete(
-        `http://localhost:8000/posts/${postId}`
+        `http://localhost:8000/posts/${postId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
       );
       if (response.status === 200) {
         setPosts((prevPosts) =>

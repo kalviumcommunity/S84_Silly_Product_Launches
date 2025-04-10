@@ -5,7 +5,22 @@ const users = require("../Models/userModel");
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken");
 
+const blacklist = new Set();
+
 router.use(express.json());
+
+const checkBlacklist = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
+    if (blacklist.has(token)) {
+      return res.status(401).json({ success: false, message: "Token is invalidated" });
+    }
+  }
+  next();
+};
+
+router.use(checkBlacklist);
 
 router.get("/", async (req, res) => {
   try {
@@ -21,24 +36,33 @@ router.get("/", async (req, res) => {
 
 router.post("/register", async (req, res) => {
   const { firstName, lastName, email, password, userName, age } = req.body;
-  if (!firstName || !lastName || !email ||  !password || !userName || !age) {
+  if (!firstName || !lastName || !email || !password || !userName || !age) {
     return res.status(400).json({
       success: false,
-      message: "All fields are required"
+      message: "All fields are required",
     });
   }
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new users({ firstName, lastName, email, password: hashedPassword, userName, age });
     await newUser.save();
-    res.json({
-      message: "New user saved",
+
+    const token = jwt.sign(
+      { id: newUser._id, email: newUser.email, userName: newUser.userName },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "New user registered successfully",
       user: newUser,
+      token,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error in posting data",
+      message: "Error in registering user",
     });
   }
 });
@@ -70,8 +94,8 @@ router.put("/:id", async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({
-        success: false,
-        message: 'Erorr in updating data'
+      success: false,
+      message: 'Erorr in updating data'
     })
   }
 });
@@ -81,11 +105,11 @@ router.delete("/:id", async (req, res) => {
 
   try {
     const deletedUser = await users.findByIdAndDelete(id)
-    if(!deletedUser){
-        return res.status(404).json({
-            success: false,
-            message: 'User not found'
-        })
+    if (!deletedUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      })
     }
     res.json({
       success: true,
@@ -98,7 +122,6 @@ router.delete("/:id", async (req, res) => {
     });
   }
 });
-
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -143,6 +166,33 @@ router.post("/login", async (req, res) => {
       success: false,
       message: "Error during login",
       error: error.message,
+    });
+  }
+});
+
+router.post("/logout", (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(400).json({ success: false, message: "Token is required" });
+  }
+
+  const token = authHeader.split(" ")[1];
+  blacklist.add(token);
+
+  res.status(200).json({ success: true, message: "Logged out successfully" });
+});
+
+router.get("/all-users", async (req, res) => {
+  try {
+    const allUsers = await users.find({}, "_id userName");
+    res.status(200).json({
+      success: true,
+      users: allUsers,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching users",
     });
   }
 });
