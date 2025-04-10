@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 const connectToDb = require("./src/Config/db");
 const users = require('./Routes/userRoutes')
 const Posts = require('./Routes/postRoutes')
@@ -14,7 +14,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/users', users);
-app.use('/posts', validateUser, Posts);
+app.use('/posts' ,Posts);
 app.use('/api', validateUser, rolerouter);
 
 // Public routes (no validation required)

@@ -2,12 +2,14 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Post = require("../Models/postModel");
+const validateUser = require("../Middlewares/authMiddleware");
+
 router.use(express.json());
 
 router.get("/", async (req, res) => {
   try {
-    const post = await Post.find();
-    res.status(200).json(post);
+    const posts = await Post.find().populate("createdBy", "userName");
+    res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -16,16 +18,18 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validateUser, async (req, res) => {
   const { title, content, image_url, likes_count, tags } = req.body;
+  const userId = req.user.id; // Extract user ID from the validated token
+
   if (!title || !content || !image_url || !tags) {
     return res.status(400).json({
       success: false,
-      message: "All fields are required"
+      message: "All fields are required",
     });
   }
   try {
-    const newPost = new Post({ title, content, image_url, likes_count, tags });
+    const newPost = new Post({ title, content, image_url, likes_count, tags, createdBy: userId });
     await newPost.save();
     res.json({
       message: "New Post saved",
@@ -39,8 +43,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-
-router.put("/:id", async (req, res) => {
+router.put("/:id", validateUser, async (req, res) => {
   const { id } = req.params;
   const { title, content, image_url, tags } = req.body;
 
@@ -70,7 +73,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", validateUser, async (req, res) => {
   const { id } = req.params;
 
   try {
