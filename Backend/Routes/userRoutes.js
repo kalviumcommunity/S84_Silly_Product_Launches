@@ -5,6 +5,11 @@ const users = require("../Models/userModel");
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken");
 
+
+const { connectToMySql } = require("../src/Config/mysqlDb");
+const connectToMongoDb = require("../src/Config/mongoDb");
+
+
 const blacklist = new Set();
 
 router.use(express.json());
