@@ -9,6 +9,9 @@ const rolerouter = require("./Routes/rolesRoute");
 const validateUser = require("./Middlewares/authMiddleware");
 require("dotenv").config();
 const { connectToMySql, insertData } = require("./src/Config/mysqlDb");
+const cookieParser = require("cookie-parser");
+
+app.use(cookieParser());
 
 
 app.use(cors());

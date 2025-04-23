@@ -20,6 +20,7 @@ export default function FormComponent({ onSubmit }) {
         console.error("Error fetching users:", error);
       }
     };
+
     fetchUsers();
   }, []);
 
@@ -35,7 +36,31 @@ export default function FormComponent({ onSubmit }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* ...existing form fields... */}
+      <label htmlFor="title">Title:</label>
+      <input
+        type="text"
+        name="title"
+        value={formData.title}
+        onChange={handleChange}
+        required
+      />
+
+      <label htmlFor="content">Content:</label>
+      <textarea
+        name="content"
+        value={formData.content}
+        onChange={handleChange}
+        required
+      />
+
+      <label htmlFor="tags">Tags:</label>
+      <input
+        type="text"
+        name="tags"
+        value={formData.tags}
+        onChange={handleChange}
+      />
+
       <label htmlFor="createdBy">Created By:</label>
       <select
         name="createdBy"
@@ -48,14 +73,15 @@ export default function FormComponent({ onSubmit }) {
         </option>
         {users.length > 0 ? (
           users.map((user) => (
-            <option key={user._id} value={user._id}>
-              {user.userName}
+            <option key={user.id} value={user.id}>
+              {user.userName} ({user.source})
             </option>
           ))
         ) : (
           <option disabled>Loading users...</option>
         )}
       </select>
+
       <button type="submit">Submit</button>
     </form>
   );

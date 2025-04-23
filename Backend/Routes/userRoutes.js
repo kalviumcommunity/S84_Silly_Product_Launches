@@ -161,6 +161,13 @@ router.post("/login", async (req, res) => {
       { expiresIn: "1h" }
     );
 
+    // Set the username in a cookie
+    res.cookie("username", user.userName, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 3600000,
+    });
+
     res.status(200).json({
       success: true,
       message: "Login successful",
@@ -176,6 +183,8 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", (req, res) => {
+  res.clearCookie("username");
+
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(400).json({ success: false, message: "Token is required" });
